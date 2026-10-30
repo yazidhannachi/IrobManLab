@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- Frames that the ZED X Mini's ROS 2 wrapper names in its message headers,
+     placed on the hand-mounted camera_link (CAD bottom tripod screw; x forward,
+     z up) at the nominal hardware optical centres (-5, +/-25, 16) mm. The
+     simulation's left/right_camera_link render 2 cm further forward. These
+     poses are nominal until a hand-eye calibration replaces them; the IMU is
+     placed at the camera centre. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="zed_x_mini_frame" params="name parent xyz rpy">
+    <link name="zed_x_mini_${name}"/>
+    <joint name="zed_x_mini_${name}_joint" type="fixed">
+      <parent link="${parent}"/><child link="zed_x_mini_${name}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+  </xacro:macro>
+  <xacro:zed_x_mini_frame name="left_camera_frame" parent="camera_link"
+    xyz="-0.005 0.025 0.016" rpy="0 0 0"/>
+  <xacro:zed_x_mini_frame name="right_camera_frame" parent="camera_link"
+    xyz="-0.005 -0.025 0.016" rpy="0 0 0"/>
+  <xacro:zed_x_mini_frame name="left_camera_frame_optical" parent="zed_x_mini_left_camera_frame"
+    xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+  <xacro:zed_x_mini_frame name="right_camera_frame_optical" parent="zed_x_mini_right_camera_frame"
+    xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+  <xacro:zed_x_mini_frame name="imu_link" parent="camera_link"
+    xyz="-0.005 0 0.016" rpy="0 0 0"/>
+</robot>

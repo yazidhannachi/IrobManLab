@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.8)
+project(franka_description)
+find_package(ament_cmake REQUIRED)
+install(DIRECTORY robots end_effectors meshes DESTINATION share/${PROJECT_NAME})
+install(FILES LICENSE NOTICE DESTINATION share/${PROJECT_NAME})
+ament_package()

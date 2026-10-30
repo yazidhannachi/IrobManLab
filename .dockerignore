@@ -1,0 +1,7 @@
+*
+!Dockerfile
+!entrypoint.sh
+!docker/franka_ros2
+!docker/franka_ros2/**
+!docker/zed
+!docker/zed/**

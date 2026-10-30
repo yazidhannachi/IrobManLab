@@ -1,0 +1,13 @@
+# Static obstacles added to the MoveIt planning scene, in the world frame
+# (world is 0.8 m below fr3_link0; x forward, y left, z up).
+# Measured cell (2026-10-27): table 0.90 m long (x) and 0.81 m wide (y); the
+# robot base stands at its rear edge, centred across the width; a wall on the
+# robot's right at 0.52 m. Re-measure after moving the robot or the table, and
+# add any further fixtures (monitors, shelves, cable ducts) here.
+boxes:
+  - id: lab_table
+    size: [0.90, 0.81, 0.05]       # x, y, z [m]
+    position: [0.45, 0.0, 0.775]   # box centre [m]; top at z = 0.8 (robot base)
+  - id: wall_right
+    size: [1.80, 0.05, 2.10]       # beyond the table and above the arm's reach
+    position: [0.30, -0.545, 1.05]  # inner face at y = -0.52

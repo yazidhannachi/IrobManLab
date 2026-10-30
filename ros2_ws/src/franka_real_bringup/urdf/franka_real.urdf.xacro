@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!-- Real FR3 with Franka Hand and the gripper-mounted ZED X Mini. Frames match the
+     simulation: world is 0.8 m below fr3_link0, so the table top is at z = 0.8. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fr3">
+  <xacro:arg name="robot_type" default="fr3"/>
+  <xacro:arg name="robot_ip" default="10.10.10.10"/>
+  <xacro:arg name="use_fake_hardware" default="false"/>
+  <xacro:arg name="base_z" default="0.8"/>
+  <link name="world"/>
+  <joint name="world_to_robot" type="fixed">
+    <parent link="world"/><child link="fr3_link0"/>
+    <origin xyz="0 0 $(arg base_z)"/>
+  </joint>
+  <xacro:include filename="$(find franka_description)/robots/common/franka_robot.xacro"/>
+  <!-- connected_to="": without Gazebo the macro would otherwise add a second
+       root link "base" above fr3_link0, which is already attached to world.
+       rpy_ee: the physical Franka Hand sits at -45 deg about the flange z axis,
+       as in libfranka's F_T_NE for Desk's "Franka Hand" end-effector. -->
+  <xacro:franka_robot robot_type="fr3" hand="true" ee_id="franka_hand"
+    gazebo="false" ros2_control="false" connected_to="" rpy_ee="0 0 ${-pi/4}"/>
+  <!-- Mount, camera and optical frames are shared with the simulation; its
+       <gazebo> sensor blocks are ignored outside Gazebo. -->
+  <xacro:include filename="$(find franka_sim_bringup)/urdf/camera_gripper.xacro"/>
+  <!-- The camera driver's own frame names, for its message headers. -->
+  <xacro:include filename="$(find franka_real_bringup)/urdf/zed_frames.xacro"/>
+  <xacro:include filename="$(find franka_real_bringup)/urdf/real_control.xacro"/>
+  <xacro:franka_real_control robot_ip="$(arg robot_ip)" use_fake_hardware="$(arg use_fake_hardware)"/>
+</robot>

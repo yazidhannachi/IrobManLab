@@ -1,0 +1,36 @@
+name: franka_lab_minimal
+services:
+  lab:
+    build:
+      context: .
+      target: lab
+    image: franka-lab-minimal:jazzy
+    container_name: franka_lab_minimal
+    hostname: ${LAB_HOSTNAME:-franka-lab}
+    network_mode: host
+    ipc: host
+    environment:
+      DISPLAY: ${DISPLAY:-:0}
+      XAUTHORITY: /tmp/lab.xauth
+      QT_X11_NO_MITSHM: '1'
+      # The host network also reaches other ROS and Gazebo systems on the LAN,
+      # some with the same names (/controller_manager, /joint_states, /tf,
+      # /clock). Keep the lab's ROS graph and Gazebo transport on this PC.
+      ROS_DOMAIN_ID: ${LAB_ROS_DOMAIN_ID:-42}
+      ROS_AUTOMATIC_DISCOVERY_RANGE: LOCALHOST
+      GZ_IP: 127.0.0.1
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${LAB_XAUTHORITY:-/dev/null}:/tmp/lab.xauth:ro
+      - ./ros2_ws/src:/home/ros2_ws/src:rw
+      - lab_build:/home/ros2_ws/build
+      - lab_install:/home/ros2_ws/install
+      - lab_log:/home/ros2_ws/log
+    stdin_open: true
+    tty: true
+volumes:
+  lab_build:
+  lab_install:
+  lab_log:

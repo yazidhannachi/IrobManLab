@@ -1,0 +1,11 @@
+# Example assignment: two three-cube towers. Coordinates are metres relative
+# to a structure origin chosen by the team on the table, with +z upwards.
+# This describes the finished structure, not a construction sequence.
+cube_size: 0.045
+blocks:
+  - {color: red,    center: [0.0, -0.05, 0.0225]}
+  - {color: green,  center: [0.0, -0.05, 0.0675]}
+  - {color: blue,   center: [0.0, -0.05, 0.1125]}
+  - {color: red,    center: [0.0,  0.05, 0.0225]}
+  - {color: green,  center: [0.0,  0.05, 0.0675]}
+  - {color: blue,   center: [0.0,  0.05, 0.1125]}

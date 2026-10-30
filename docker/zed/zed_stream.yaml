@@ -1,0 +1,22 @@
+# Overrides of the ZED wrapper defaults (zed_wrapper/config/common_stereo.yaml
+# and zedxm.yaml) for the lab's stream receiver.
+/**:
+  ros__parameters:
+    general:
+      pub_frame_rate: 30.0          # the camera's full rate (the simulation uses 15 Hz)
+    video:
+      publish_left_right: true      # for /zed_x_mini/right/image
+    depth:
+      depth_mode: 'NEURAL_LIGHT'    # SDK 5.x offers only neural depth modes
+      point_cloud_freq: 30.0
+      # Stabilisation needs positional tracking, which waits for the wrapper's
+      # own camera TF; on a moving arm the robot provides the camera pose.
+      depth_stabilization: 0
+    pos_tracking:
+      pos_tracking_enabled: false
+    sensors:
+      publish_imu_tf: false
+    debug:
+      # Stamp messages with this PC's clock: the Jetson's clock is not
+      # synchronised with it, so camera timestamps would not match TF.
+      use_pub_timestamps: true

@@ -1,0 +1,32 @@
+# ZED X Mini receiver overlay: ./scripts/run.sh --real --zed (needs an NVIDIA GPU
+# and the NVIDIA Container Toolkit). Receives the Jetson's ZED SDK stream
+# (default 192.168.55.1:30000) and publishes /zed_x_mini/* on the lab's ROS graph.
+services:
+  zed:
+    build:
+      context: .
+      dockerfile: docker/zed/Dockerfile
+    image: franka-lab-zed:jazzy
+    container_name: franka_lab_zed
+    network_mode: host
+    ipc: host
+    environment:
+      ROS_DOMAIN_ID: ${LAB_ROS_DOMAIN_ID:-42}
+      ROS_AUTOMATIC_DISCOVERY_RANGE: LOCALHOST
+      ZED_STREAM_ADDRESS: ${ZED_STREAM_ADDRESS:-192.168.55.1}
+      ZED_STREAM_PORT: ${ZED_STREAM_PORT:-30000}
+      NVIDIA_DRIVER_CAPABILITIES: all
+    volumes:
+      # Launch file and parameters; edits apply on the next container start.
+      - ./docker/zed:/opt/zed_lab:ro
+      # Neural depth models, optimised for this GPU on the first start (minutes).
+      - zed_resources:/usr/local/zed/resources
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+volumes:
+  zed_resources:

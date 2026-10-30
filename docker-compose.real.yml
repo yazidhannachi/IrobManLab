@@ -1,0 +1,15 @@
+# Real FR3 overlay: ./scripts/run.sh --real [--nvidia]
+# Uses the host network to reach the robot (default 10.10.10.10) and grants the
+# realtime scheduling that libfranka requires on this PREEMPT_RT host.
+services:
+  lab:
+    build:
+      target: real
+      args:
+        LIBFRANKA_VERSION: ${LIBFRANKA_VERSION:-0.20.5}
+    image: franka-lab-real:jazzy
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 99
+      memlock: -1

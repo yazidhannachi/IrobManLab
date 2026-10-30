@@ -1,0 +1,14 @@
+# Run the CPU at full speed after every boot so the 1 kHz FCI loop stays on
+# time. power-profiles-daemon otherwise restores its "balanced" profile and the
+# powersave governor. Install with: sudo ./scripts/install_cpu_performance.sh
+[Unit]
+Description=CPU performance mode for the Franka FCI control loop
+After=power-profiles-daemon.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'if command -v powerprofilesctl >/dev/null; then powerprofilesctl set performance; fi; for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo performance > "$g"; done'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

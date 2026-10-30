@@ -1,0 +1,7 @@
+fr3_gripper_bridge:
+  ros__parameters:
+    # Closing commands become franka_gripper grasps that hold with this force.
+    grasp_force: 20.0      # [N], Franka Hand: up to 70 N continuous
+    speed: 0.05            # [m/s], at most 0.1
+    # Grasps succeed wherever the fingers stop; check /joint_states for contact.
+    grasp_epsilon: 0.08    # [m]

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <ros2_control name="LabSimulation" type="system">
+    <hardware><plugin>gz_ros2_control/GazeboSimSystem</plugin></hardware>
+    <xacro:macro name="sim_joint" params="name position">
+      <joint name="${name}">
+        <command_interface name="position">
+          <xacro:if value="${'finger' in name}">
+            <param name="min">0.0</param>
+            <param name="max">0.04</param>
+          </xacro:if>
+        </command_interface>
+        <state_interface name="position"><param name="initial_value">${position}</param></state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+    </xacro:macro>
+    <xacro:sim_joint name="fr3_joint1" position="0"/>
+    <xacro:sim_joint name="fr3_joint2" position="${-pi/4}"/>
+    <xacro:sim_joint name="fr3_joint3" position="0"/>
+    <xacro:sim_joint name="fr3_joint4" position="${-3*pi/4}"/>
+    <xacro:sim_joint name="fr3_joint5" position="0"/>
+    <xacro:sim_joint name="fr3_joint6" position="${pi/2}"/>
+    <xacro:sim_joint name="fr3_joint7" position="${pi/4}"/>
+    <xacro:sim_joint name="fr3_finger_joint1" position="0"/>
+    <xacro:sim_joint name="fr3_finger_joint2" position="0"/>
+  </ros2_control>
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find franka_sim_bringup)/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+</robot>

@@ -1,0 +1,54 @@
+# Real FR3 (franka_hardware). Controller names and joints match the simulation,
+# so the same action interfaces work on hardware. The arm trajectory controller
+# commands joint torques with PD gains from upstream franka_fr3_moveit_config;
+# libfranka adds gravity compensation for the end-effector load set in Desk.
+controller_manager:
+  ros__parameters:
+    update_rate: 1000
+    thread_priority: 98
+    # As upstream franka_ros2: libfranka paces the loop; never skip cycles.
+    overruns:
+      manage: false
+      print_warnings: false
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    fr3_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    franka_robot_state_broadcaster:
+      type: franka_robot_state_broadcaster/FrankaRobotStateBroadcaster
+
+fr3_arm_controller:
+  ros__parameters:
+    joints: [fr3_joint1, fr3_joint2, fr3_joint3, fr3_joint4, fr3_joint5, fr3_joint6, fr3_joint7]
+    command_interfaces: [effort]
+    state_interfaces: [position, velocity]
+    gains:
+      fr3_joint1: {p: 600., d: 30., i: 0., i_clamp: 1.}
+      fr3_joint2: {p: 600., d: 30., i: 0., i_clamp: 1.}
+      fr3_joint3: {p: 600., d: 30., i: 0., i_clamp: 1.}
+      fr3_joint4: {p: 600., d: 30., i: 0., i_clamp: 1.}
+      fr3_joint5: {p: 250., d: 10., i: 0., i_clamp: 1.}
+      fr3_joint6: {p: 150., d: 10., i: 0., i_clamp: 1.}
+      fr3_joint7: {p: 50., d: 5., i: 0., i_clamp: 1.}
+    # Safety net (not in upstream): abort a goal and hold the current pose when
+    # a joint is more than 0.1 rad from its desired position, e.g. a goal that
+    # does not start at the current state, or an unexpected contact.
+    constraints:
+      fr3_joint1: {trajectory: 0.1}
+      fr3_joint2: {trajectory: 0.1}
+      fr3_joint3: {trajectory: 0.1}
+      fr3_joint4: {trajectory: 0.1}
+      fr3_joint5: {trajectory: 0.1}
+      fr3_joint6: {trajectory: 0.1}
+      fr3_joint7: {trajectory: 0.1}
+
+# /franka/joint_states feeds joint_state_publisher (30 Hz /joint_states) and
+# trajectory_guard.py; 100 Hz is plenty and spares them parsing 1 kHz in Python.
+joint_state_broadcaster:
+  ros__parameters:
+    update_rate: 100
+
+franka_robot_state_broadcaster:
+  ros__parameters:
+    robot_type: fr3
+    convenience_publish_rate: 100
