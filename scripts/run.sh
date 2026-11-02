@@ -8,6 +8,9 @@ if [[ ! -f "$LAB_XAUTHORITY" ]]; then
   exit 1
 fi
 compose=(docker compose -f docker-compose.yml)
+if [[ -f docker-compose.override.yml ]]; then
+  compose+=(-f docker-compose.override.yml)
+fi
 for arg in "$@"; do
   case "$arg" in
     --nvidia) compose+=(-f docker-compose.nvidia.yml) ;;
