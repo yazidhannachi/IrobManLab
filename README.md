@@ -1,3 +1,4 @@
+
 # Robotic manipulation lab
 
 Minimal ROS 2 Jazzy / Gazebo Harmonic / MoveIt environment for an FR3 with a
@@ -143,3 +144,4 @@ is included and used for both
 visuals and collision checking. It replaces the previous custom bracket.
 
 ![ZED X Mini with supplied mount on the Franka Hand](cad/zed_x_mini/preview.png)
+
